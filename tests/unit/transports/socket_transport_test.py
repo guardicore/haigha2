@@ -8,8 +8,8 @@ from chai import Chai
 import errno
 import socket
 
-from haigha.transports import socket_transport
-from haigha.transports.socket_transport import *
+from haigha2.transports import socket_transport
+from haigha2.transports.socket_transport import *
 
 
 class SocketTransportTest(Chai):

@@ -5,8 +5,8 @@ demostrate how to write a rpc client
 import sys, os, uuid, time
 sys.path.append(os.path.abspath(".."))
 
-from haigha.connection import Connection
-from haigha.message import Message
+from haigha2.connection import Connection
+from haigha2.message import Message
 
 class FibonacciRpcClient(object):
     def __init__(self):

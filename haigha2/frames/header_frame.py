@@ -6,9 +6,9 @@ https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 
 from collections import deque
 
-from haigha.writer import Writer
-from haigha.reader import Reader
-from haigha.frames.frame import Frame
+from haigha2.writer import Writer
+from haigha2.reader import Reader
+from haigha2.frames.frame import Frame
 
 
 class HeaderFrame(Frame):

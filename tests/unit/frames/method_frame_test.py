@@ -9,10 +9,10 @@ import struct
 import time
 from datetime import datetime
 
-from haigha.frames import method_frame
-from haigha.frames.method_frame import MethodFrame
-from haigha.reader import Reader
-from haigha.writer import Writer
+from haigha2.frames import method_frame
+from haigha2.frames.method_frame import MethodFrame
+from haigha2.reader import Reader
+from haigha2.writer import Writer
 
 
 class MethodFrameTest(Chai):

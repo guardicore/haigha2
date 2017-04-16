@@ -6,14 +6,14 @@ https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 
 from chai import Chai
 
-from haigha.classes import basic_class
-from haigha.classes.protocol_class import ProtocolClass
-from haigha.classes.basic_class import BasicClass
-from haigha.frames.method_frame import MethodFrame
-from haigha.writer import Writer
-from haigha.reader import Reader
-from haigha.message import Message
-from haigha.connection import Connection
+from haigha2.classes import basic_class
+from haigha2.classes.protocol_class import ProtocolClass
+from haigha2.classes.basic_class import BasicClass
+from haigha2.frames.method_frame import MethodFrame
+from haigha2.writer import Writer
+from haigha2.reader import Reader
+from haigha2.message import Message
+from haigha2.connection import Connection
 
 from collections import deque
 

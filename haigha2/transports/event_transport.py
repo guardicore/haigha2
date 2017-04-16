@@ -6,7 +6,7 @@ https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 
 import warnings
 
-from haigha.transports.transport import Transport
+from haigha2.transports.transport import Transport
 
 try:
     from eventsocket import EventSocket

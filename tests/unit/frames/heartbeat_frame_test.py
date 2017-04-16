@@ -6,9 +6,9 @@ https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 
 from chai import Chai
 
-from haigha.frames import heartbeat_frame
-from haigha.frames.heartbeat_frame import HeartbeatFrame
-from haigha.frames.frame import Frame
+from haigha2.frames import heartbeat_frame
+from haigha2.frames.heartbeat_frame import HeartbeatFrame
+from haigha2.frames.frame import Frame
 
 
 class HeartbeatFrameTest(Chai):

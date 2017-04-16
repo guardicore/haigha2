@@ -7,12 +7,12 @@ https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 from collections import deque
 import copy
 
-from haigha.connection import Connection
-from haigha.classes.basic_class import BasicClass
-from haigha.classes.exchange_class import ExchangeClass
-from haigha.classes.protocol_class import ProtocolClass
-from haigha.writer import Writer
-from haigha.frames.method_frame import MethodFrame
+from haigha2.connection import Connection
+from haigha2.classes.basic_class import BasicClass
+from haigha2.classes.exchange_class import ExchangeClass
+from haigha2.classes.protocol_class import ProtocolClass
+from haigha2.writer import Writer
+from haigha2.frames.method_frame import MethodFrame
 
 
 class RabbitConnection(Connection):

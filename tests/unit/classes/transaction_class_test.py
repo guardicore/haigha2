@@ -6,11 +6,11 @@ https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 
 from chai import Chai
 
-from haigha.classes import transaction_class
-from haigha.classes.protocol_class import ProtocolClass
-from haigha.classes.transaction_class import TransactionClass
-from haigha.frames.method_frame import MethodFrame
-from haigha.writer import Writer
+from haigha2.classes import transaction_class
+from haigha2.classes.protocol_class import ProtocolClass
+from haigha2.classes.transaction_class import TransactionClass
+from haigha2.frames.method_frame import MethodFrame
+from haigha2.writer import Writer
 
 from collections import deque
 

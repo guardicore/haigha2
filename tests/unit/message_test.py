@@ -6,7 +6,7 @@ https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 
 from chai import Chai
 
-from haigha.message import Message
+from haigha2.message import Message
 
 
 class MessageTest(Chai):

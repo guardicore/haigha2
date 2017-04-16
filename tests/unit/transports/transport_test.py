@@ -6,7 +6,7 @@ https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 
 from chai import Chai
 
-from haigha.transports.transport import Transport
+from haigha2.transports.transport import Transport
 
 
 class TransportTest(Chai):

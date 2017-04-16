@@ -13,7 +13,7 @@ class Transport(object):
 
     def __init__(self, connection):
         '''
-        Initialize a transport on a haigha.Connection instance.
+        Initialize a transport on a haigha2.Connection instance.
         '''
         self._connection = connection
 
@@ -43,7 +43,7 @@ class Transport(object):
         '''
         Read from the transport. If no data is available, should return None.
         The return value can be any data type that is supported by the
-        haigha.Reader class.
+        haigha2.Reader class.
 
         Caller passes in an optional timeout. Each transport determines how to
         implement this.

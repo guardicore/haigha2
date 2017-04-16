@@ -4,8 +4,8 @@ Copyright (c) 2011-2017, Agora Games, LLC All rights reserved.
 https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 '''
 
-from haigha.frames.method_frame import MethodFrame
-from haigha.classes.protocol_class import ProtocolClass
+from haigha2.frames.method_frame import MethodFrame
+from haigha2.classes.protocol_class import ProtocolClass
 
 from collections import deque
 

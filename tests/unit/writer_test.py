@@ -8,7 +8,7 @@ from chai import Chai
 from datetime import datetime
 from decimal import Decimal
 
-from haigha.writer import Writer
+from haigha2.writer import Writer
 
 
 class WriterTest(Chai):

@@ -7,11 +7,11 @@ from collections import deque
 
 from chai import Chai
 
-from haigha.classes import exchange_class
-from haigha.classes.protocol_class import ProtocolClass
-from haigha.classes.exchange_class import ExchangeClass
-from haigha.frames.method_frame import MethodFrame
-from haigha.writer import Writer
+from haigha2.classes import exchange_class
+from haigha2.classes.protocol_class import ProtocolClass
+from haigha2.classes.exchange_class import ExchangeClass
+from haigha2.frames.method_frame import MethodFrame
+from haigha2.writer import Writer
 
 
 class ExchangeClassTest(Chai):

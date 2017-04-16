@@ -6,9 +6,9 @@ https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 
 from chai import Chai
 
-from haigha.frames import content_frame
-from haigha.frames.content_frame import ContentFrame
-from haigha.frames.frame import Frame
+from haigha2.frames import content_frame
+from haigha2.frames.content_frame import ContentFrame
+from haigha2.frames.frame import Frame
 
 
 class ContentFrameTest(Chai):

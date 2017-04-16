@@ -10,8 +10,8 @@ import random
 import socket
 from optparse import OptionParser
 
-from haigha.connection import Connection
-from haigha.message import Message
+from haigha2.connection import Connection
+from haigha2.message import Message
 
 parser = OptionParser(
   usage='Usage: synchronous_test [options]'
@@ -29,7 +29,7 @@ level = logging.DEBUG if debug else logging.INFO
 
 # Setup logging
 logging.basicConfig(level=level, format="[%(levelname)s %(asctime)s] %(message)s" )
-logger = logging.getLogger('haigha')
+logger = logging.getLogger('haigha2')
 
 sock_opts = {
   (socket.IPPROTO_TCP, socket.TCP_NODELAY) : 1,

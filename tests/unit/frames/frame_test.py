@@ -8,9 +8,9 @@ from chai import Chai
 import struct
 from collections import deque
 
-from haigha.frames import frame
-from haigha.frames.frame import Frame
-from haigha.reader import Reader
+from haigha2.frames import frame
+from haigha2.frames.frame import Frame
+from haigha2.reader import Reader
 
 
 class FrameTest(Chai):

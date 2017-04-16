@@ -6,10 +6,14 @@ https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 
 import warnings
 
-from haigha.transports.socket_transport import SocketTransport
+from haigha2.transports.socket_transport import SocketTransport
 
 try:
     import gevent
+    import gevent.ssl
+    import gevent._socket2
+    import gevent.socket
+    import gevent.ssl
     from gevent.event import Event
     try:
         # Semaphore moved here since gevent-1.0b2
@@ -129,3 +133,62 @@ class GeventPoolTransport(GeventTransport):
         '''
         for channel in channels:
             self._pool.spawn(channel.process_frames)
+
+
+
+# Re-add sslwrap to Python 2.7.8 (needed for gevent SSL sockets)
+
+import inspect
+__ssl__ = __import__('ssl')
+
+try:
+    _ssl = __ssl__._ssl
+except AttributeError:
+    _ssl = __ssl__._ssl2
+
+def new_sslwrap(sock, server_side=False, keyfile=None, certfile=None, cert_reqs=__ssl__.CERT_NONE, ssl_version=__ssl__.PROTOCOL_SSLv23, ca_certs=None, ciphers=None):
+    context = __ssl__.SSLContext(ssl_version)
+    context.verify_mode = cert_reqs or __ssl__.CERT_NONE
+    if ca_certs:
+        context.load_verify_locations(ca_certs)
+    if certfile:
+        context.load_cert_chain(certfile, keyfile)
+    if ciphers:
+        context.set_ciphers(ciphers)
+
+    caller_self = inspect.currentframe().f_back.f_locals['self']
+    return context._wrap_socket(sock, server_side=server_side, ssl_sock=caller_self)
+
+def patch_sslwrap():
+    if not hasattr(_ssl, 'sslwrap'):
+        _ssl.sslwrap = new_sslwrap
+
+class FixedGeventSSLSocket(gevent.ssl.SSLSocket):
+    """Wrap recv timeout errors in a regular timeout error, in order for haigha2 to correctly
+    handle timeouts
+    """
+    def recv(self, *args, **kwargs):
+        try:
+            return super(FixedGeventSSLSocket, self).recv(*args, **kwargs)
+        except gevent.ssl.SSLError as e:
+            if e == gevent.ssl._SSLErrorReadTimeout:
+                raise socket.timeout('timed out')
+            raise
+
+class SSLGeventTransport(GeventTransport):
+    def __init__(self, *args, **kwargs):
+        super(SSLGeventTransport, self).__init__(*args, **kwargs)
+
+    def initialize_transport(self, **kwargs):
+        self.ssl_parameters = kwargs
+
+    def connect(self, (host, port)):
+        '''
+        Connect using a host,port tuple
+        '''
+
+        def ssl_socket(*args, **kwargs):
+            sock = gevent.socket.socket(*args, **kwargs)
+            return FixedGeventSSLSocket(sock, **self.ssl_parameters)
+
+        SocketTransport.connect(self, (host, port), klass=ssl_socket)

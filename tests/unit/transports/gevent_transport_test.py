@@ -14,8 +14,8 @@ try:
     from gevent import socket
     from gevent.pool import Pool
 
-    from haigha.transports import gevent_transport
-    from haigha.transports.gevent_transport import *
+    from haigha2.transports import gevent_transport
+    from haigha2.transports.gevent_transport import *
 except ImportError:
     import warnings
     warnings.warn('Failed to load gevent modules')

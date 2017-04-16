@@ -10,8 +10,8 @@ import random
 import socket
 from optparse import OptionParser
 
-from haigha.connection import Connection
-from haigha.message import Message
+from haigha2.connection import Connection
+from haigha2.message import Message
 
 parser = OptionParser(
   usage='Usage: synchronous_test [options]'
@@ -41,7 +41,7 @@ connection = Connection(logger=logging, debug=debug,
   sock_opts=sock_opts,
   transport='socket')
 
-hello = '''Welcome to haigha console.
+hello = '''Welcome to haigha2 console.
 
 `connection` - The established connection to %s:%s
 `Message` - The Message type

@@ -6,8 +6,8 @@ https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 
 from chai import Chai
 
-from haigha.classes import protocol_class
-from haigha.classes.protocol_class import ProtocolClass
+from haigha2.classes import protocol_class
+from haigha2.classes.protocol_class import ProtocolClass
 
 
 class ProtocolClassTest(Chai):

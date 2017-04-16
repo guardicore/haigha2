@@ -6,9 +6,9 @@ https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 
 from collections import deque
 
-from haigha.writer import Writer
-from haigha.frames.method_frame import MethodFrame
-from haigha.classes.protocol_class import ProtocolClass
+from haigha2.writer import Writer
+from haigha2.frames.method_frame import MethodFrame
+from haigha2.classes.protocol_class import ProtocolClass
 
 
 class ExchangeClass(ProtocolClass):

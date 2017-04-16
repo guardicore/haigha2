@@ -7,7 +7,7 @@ https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 import struct
 import sys
 from collections import deque
-from haigha.reader import Reader
+from haigha2.reader import Reader
 
 
 class Frame(object):

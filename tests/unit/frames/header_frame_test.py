@@ -9,10 +9,10 @@ import struct
 import time
 from datetime import datetime
 
-from haigha.frames import header_frame
-from haigha.frames.header_frame import HeaderFrame
-from haigha.reader import Reader
-from haigha.writer import Writer
+from haigha2.frames import header_frame
+from haigha2.frames.header_frame import HeaderFrame
+from haigha2.reader import Reader
+from haigha2.writer import Writer
 
 
 class HeaderFrameTest(Chai):

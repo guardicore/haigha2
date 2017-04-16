@@ -5,14 +5,14 @@ sys.path.append(os.path.abspath("."))
 import gevent
 import gevent.socket
 from gevent.event import AsyncResult
-from haigha.connection import Connection
-from haigha.message import Message
+from haigha2.connection import Connection
+from haigha2.message import Message
 
 # NOTE: Work around a bug in Haigha 0.5.1-0.5.3 that breaks gevent
 #  compatibility
-import haigha
+import haigha2
 try:
-  haigha_version = haigha.__version__
+  haigha_version = haigha2.__version__
 except AttributeError:
   pass
 else:
@@ -25,7 +25,7 @@ else:
     print >>sys.stderr, \
     "WARNING: DEPLOYING GEVENT-FRIENDLINESS BUG WORK-AROUND FOR HAIGHA v%s" % (
       haigha_version)
-    from haigha.transports import socket_transport
+    from haigha2.transports import socket_transport
     import gevent.socket
     socket_transport.socket = gevent.socket
 

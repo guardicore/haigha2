@@ -4,21 +4,21 @@ Copyright (c) 2011-2017, Agora Games, LLC All rights reserved.
 https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 '''
 
-from haigha.channel import Channel
-from haigha.frames.frame import Frame
-from haigha.frames.heartbeat_frame import HeartbeatFrame
-from haigha.frames.method_frame import MethodFrame
-from haigha.classes.basic_class import BasicClass
-from haigha.classes.channel_class import ChannelClass
-from haigha.classes.exchange_class import ExchangeClass
-from haigha.classes.queue_class import QueueClass
-from haigha.classes.transaction_class import TransactionClass
-from haigha.writer import Writer
-from haigha.reader import Reader
-from haigha.transports.transport import Transport
+from haigha2.channel import Channel
+from haigha2.frames.frame import Frame
+from haigha2.frames.heartbeat_frame import HeartbeatFrame
+from haigha2.frames.method_frame import MethodFrame
+from haigha2.classes.basic_class import BasicClass
+from haigha2.classes.channel_class import ChannelClass
+from haigha2.classes.exchange_class import ExchangeClass
+from haigha2.classes.queue_class import QueueClass
+from haigha2.classes.transaction_class import TransactionClass
+from haigha2.writer import Writer
+from haigha2.reader import Reader
+from haigha2.transports.transport import Transport
 from exceptions import ConnectionError, ConnectionClosed
 
-import haigha
+import haigha2
 import time
 
 from logging import root as root_logger
@@ -34,7 +34,7 @@ PROTOCOL_HEADER = 'AMQP\x00\x00\x09\x01'
 # Client property info that gets sent to the server on connection startup
 LIBRARY_PROPERTIES = {
     'library': 'Haigha',
-    'library_version': haigha.__version__,
+    'library_version': haigha2.__version__,
 }
 
 
@@ -118,17 +118,17 @@ class Connection(object):
         transport = kwargs.get('transport', 'socket')
         if not isinstance(transport, Transport):
             if transport == 'event':
-                from haigha.transports.event_transport import EventTransport
+                from haigha2.transports.event_transport import EventTransport
                 self._transport = EventTransport(self)
             elif transport == 'gevent':
-                from haigha.transports.gevent_transport import GeventTransport
+                from haigha2.transports.gevent_transport import GeventTransport
                 self._transport = GeventTransport(self)
             elif transport == 'gevent_pool':
-                from haigha.transports.gevent_transport import \
+                from haigha2.transports.gevent_transport import \
                     GeventPoolTransport
                 self._transport = GeventPoolTransport(self, **kwargs)
             elif transport == 'socket':
-                from haigha.transports.socket_transport import SocketTransport
+                from haigha2.transports.socket_transport import SocketTransport
                 self._transport = SocketTransport(self)
         else:
             self._transport = transport

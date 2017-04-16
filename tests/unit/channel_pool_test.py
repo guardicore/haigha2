@@ -8,7 +8,7 @@ from collections import deque
 
 from chai import Chai
 
-from haigha.channel_pool import ChannelPool
+from haigha2.channel_pool import ChannelPool
 
 
 class ChannelPoolTest(Chai):

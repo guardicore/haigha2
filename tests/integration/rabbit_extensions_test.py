@@ -33,8 +33,8 @@ import logging
 import socket
 import unittest
 
-from haigha.connections.rabbit_connection import RabbitConnection
-from haigha.message import Message
+from haigha2.connections.rabbit_connection import RabbitConnection
+from haigha2.message import Message
 
 
 class TestOptions(object): # pylint: disable=R0903
@@ -60,7 +60,7 @@ def setUpModule(): # pylint: disable=C0103
     log_level = logging.DEBUG if _OPTIONS.debug else logging.INFO
     logging.basicConfig(level=log_level,
                         format="[%(levelname)s %(asctime)s] %(message)s")
-    _LOG = logging.getLogger('haigha')
+    _LOG = logging.getLogger('haigha2')
 
 
 class _CallbackSink(object):

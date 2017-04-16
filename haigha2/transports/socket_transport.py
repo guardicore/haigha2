@@ -4,7 +4,7 @@ Copyright (c) 2011-2017, Agora Games, LLC All rights reserved.
 https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 '''
 
-from haigha.transports.transport import Transport
+from haigha2.transports.transport import Transport
 
 import errno
 import socket

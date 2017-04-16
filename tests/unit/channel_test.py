@@ -7,19 +7,19 @@ https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 from chai import Chai
 from collections import deque
 
-from haigha import channel
-from haigha.channel import Channel, SyncWrapper
-from haigha.exceptions import ChannelError, ChannelClosed, ConnectionClosed
-from haigha.classes.basic_class import BasicClass
-from haigha.classes.channel_class import ChannelClass
-from haigha.classes.exchange_class import ExchangeClass
-from haigha.classes.queue_class import QueueClass
-from haigha.classes.transaction_class import TransactionClass
-from haigha.classes.protocol_class import ProtocolClass
-from haigha.frames.method_frame import MethodFrame
-from haigha.frames.heartbeat_frame import HeartbeatFrame
-from haigha.frames.header_frame import HeaderFrame
-from haigha.frames.content_frame import ContentFrame
+from haigha2 import channel
+from haigha2.channel import Channel, SyncWrapper
+from haigha2.exceptions import ChannelError, ChannelClosed, ConnectionClosed
+from haigha2.classes.basic_class import BasicClass
+from haigha2.classes.channel_class import ChannelClass
+from haigha2.classes.exchange_class import ExchangeClass
+from haigha2.classes.queue_class import QueueClass
+from haigha2.classes.transaction_class import TransactionClass
+from haigha2.classes.protocol_class import ProtocolClass
+from haigha2.frames.method_frame import MethodFrame
+from haigha2.frames.heartbeat_frame import HeartbeatFrame
+from haigha2.frames.header_frame import HeaderFrame
+from haigha2.frames.content_frame import ContentFrame
 
 
 class SyncWrapperTest(Chai):

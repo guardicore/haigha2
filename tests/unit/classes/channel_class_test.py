@@ -6,12 +6,12 @@ https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 
 from chai import Chai
 
-from haigha.channel import Channel
-from haigha.classes import channel_class
-from haigha.classes.protocol_class import ProtocolClass
-from haigha.classes.channel_class import ChannelClass
-from haigha.frames.method_frame import MethodFrame
-from haigha.writer import Writer
+from haigha2.channel import Channel
+from haigha2.classes import channel_class
+from haigha2.classes.protocol_class import ProtocolClass
+from haigha2.classes.channel_class import ChannelClass
+from haigha2.frames.method_frame import MethodFrame
+from haigha2.writer import Writer
 
 
 class ChannelClassTest(Chai):

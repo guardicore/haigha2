@@ -9,7 +9,7 @@ from datetime import datetime
 from io import BytesIO
 from decimal import Decimal
 
-from haigha.reader import Reader
+from haigha2.reader import Reader
 import struct
 import operator
 

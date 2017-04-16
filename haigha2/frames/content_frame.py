@@ -4,8 +4,8 @@ Copyright (c) 2011-2017, Agora Games, LLC All rights reserved.
 https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 '''
 
-from haigha.writer import Writer
-from haigha.frames.frame import Frame
+from haigha2.writer import Writer
+from haigha2.frames.frame import Frame
 
 
 class ContentFrame(Frame):

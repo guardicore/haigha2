@@ -19,8 +19,8 @@ import logging
 import gevent
 import gevent.event as gevent_event
 
-from haigha.connection import Connection as haigha_Connection
-from haigha.message import Message
+from haigha2.connection import Connection as haigha_Connection
+from haigha2.message import Message
 
 
 class HaighaGeventHello(object):

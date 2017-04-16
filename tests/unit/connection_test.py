@@ -7,24 +7,24 @@ https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 import logging
 from chai import Chai
 
-from haigha import connection, __version__
-from haigha.connection import Connection, ConnectionChannel, ConnectionError, ConnectionClosed
-from haigha.channel import Channel
-from haigha.frames.frame import Frame
-from haigha.frames.method_frame import MethodFrame
-from haigha.frames.heartbeat_frame import HeartbeatFrame
-from haigha.frames.header_frame import HeaderFrame
-from haigha.frames.content_frame import ContentFrame
-from haigha.classes.basic_class import BasicClass
-from haigha.classes.channel_class import ChannelClass
-from haigha.classes.exchange_class import ExchangeClass
-from haigha.classes.queue_class import QueueClass
-from haigha.classes.transaction_class import TransactionClass
-from haigha.classes.protocol_class import ProtocolClass
+from haigha2 import connection, __version__
+from haigha2.connection import Connection, ConnectionChannel, ConnectionError, ConnectionClosed
+from haigha2.channel import Channel
+from haigha2.frames.frame import Frame
+from haigha2.frames.method_frame import MethodFrame
+from haigha2.frames.heartbeat_frame import HeartbeatFrame
+from haigha2.frames.header_frame import HeaderFrame
+from haigha2.frames.content_frame import ContentFrame
+from haigha2.classes.basic_class import BasicClass
+from haigha2.classes.channel_class import ChannelClass
+from haigha2.classes.exchange_class import ExchangeClass
+from haigha2.classes.queue_class import QueueClass
+from haigha2.classes.transaction_class import TransactionClass
+from haigha2.classes.protocol_class import ProtocolClass
 
-from haigha.transports import event_transport
-from haigha.transports import gevent_transport
-from haigha.transports import socket_transport
+from haigha2.transports import event_transport
+from haigha2.transports import gevent_transport
+from haigha2.transports import socket_transport
 
 
 class ConnectionTest(Chai):

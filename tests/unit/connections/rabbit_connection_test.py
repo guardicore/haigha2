@@ -8,12 +8,12 @@ from collections import deque
 import logging
 from chai import Chai
 
-from haigha.connections import rabbit_connection
-from haigha.connections.rabbit_connection import *
-from haigha.connection import Connection
-from haigha.writer import Writer
-from haigha.frames import *
-from haigha.classes import *
+from haigha2.connections import rabbit_connection
+from haigha2.connections.rabbit_connection import *
+from haigha2.connection import Connection
+from haigha2.writer import Writer
+from haigha2.frames import *
+from haigha2.classes import *
 
 
 class RabbitConnectionTest(Chai):
