@@ -15,7 +15,7 @@ try:
     from eventlet.green.ssl import orig_socket as eventlet_green_ssl_orig_socket
     from eventlet.green.ssl import socket as eventlet_green_ssl_socket
 except ImportError:
-    warnings.warn('Failed to load gevent modules')
+    warnings.warn('Failed to load eventlet modules')
     EventletSemaphore = None
     EventletEvent = None
     EventletTimeout = None
@@ -32,7 +32,7 @@ except ImportError:
 
 class EventletTransport(SocketTransport):
     '''
-    This is a eventlet based transport for haigha2. Inspired by haigha2's gevent_transport.
+    This is a eventlet based transport for haigha. Inspired by haigha's gevent_transport.
     '''
 
     def __init__(self, *args, **kwargs):

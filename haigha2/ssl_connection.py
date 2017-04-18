@@ -1,6 +1,4 @@
 from haigha2.connection import Connection
-from haigha2.transports.eventlet_transport import SSLEventletTransport
-from haigha2.transports.gevent_transport import SSLGeventTransport
 
 class InvalidHostNameInCertificateError(Exception):
     def __init__(self, hostname):
@@ -24,14 +22,14 @@ class SSLConnection(Connection):
         super(SSLConnection, self).__init__(*self._init_args, transport=transport, **self._init_kwargs)
 
     def _initialize_transport(self, transport_type):
-        transport_types = {
-            'gevent': SSLGeventTransport,
-            'eventlet': SSLEventletTransport
-        }
-        if transport_type not in transport_types:
+        if transport_type == 'gevent':
+            from haigha2.transports.gevent_transport import SSLGeventTransport
+            transport_class = SSLGeventTransport
+        elif transport_type == 'eventlet':
+            from haigha2.transports.eventlet_transport import SSLEventletTransport
+            transport_class = SSLEventletTransport
+        else:
             raise StandardError("Unsupported transport type '{transport_type}'".format(transport_type=transport_type))
-
-        transport_class = transport_types[transport_type]
 
         if transport_class is None:
             raise StandardError("Transport type is '{transport_type}' but {transport_type} not installed".format(
