@@ -1,4 +1,5 @@
 import warnings
+import socket
 
 from haigha2.transports.socket_transport import SocketTransport
 
