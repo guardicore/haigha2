@@ -15,15 +15,15 @@ class ChannelPoolTest(Chai):
 
     def test_init(self):
         c = ChannelPool('connection')
-        self.assertEquals('connection', c._connection)
-        self.assertEquals(set(), c._free_channels)
+        self.assertEqual('connection', c._connection)
+        self.assertEqual(set(), c._free_channels)
         assert_equals(None, c._size)
         assert_equals(0, c._channels)
         assert_equals(deque(), c._queue)
 
         c = ChannelPool('connection', size=50)
-        self.assertEquals('connection', c._connection)
-        self.assertEquals(set(), c._free_channels)
+        self.assertEqual('connection', c._connection)
+        self.assertEqual(set(), c._free_channels)
         assert_equals(50, c._size)
         assert_equals(0, c._channels)
         assert_equals(deque(), c._queue)
@@ -141,7 +141,7 @@ class ChannelPoolTest(Chai):
         expect(ch3.publish_synchronous).args('arg1', 'arg2', cb=ignore())
 
         cp.publish('arg1', 'arg2')
-        self.assertEquals(set([ch1, ch2]), cp._free_channels)
+        self.assertEqual(set([ch1, ch2]), cp._free_channels)
 
     def test_publish_appends_to_queue_when_no_ready_channels(self):
         cp = ChannelPool(None)
@@ -149,7 +149,7 @@ class ChannelPoolTest(Chai):
         expect(cp._get_channel).returns(None)
 
         cp.publish('arg1', 'arg2', arg3='foo', cb='usercb')
-        self.assertEquals(set(), cp._free_channels)
+        self.assertEqual(set(), cp._free_channels)
         assert_equals(deque([(('arg1', 'arg2'), {'arg3': 'foo', 'cb': 'usercb'})]),
                       cp._queue)
 
@@ -162,7 +162,7 @@ class ChannelPoolTest(Chai):
         expect(cp._get_channel).returns(None)
 
         cp.publish('arg1', 'arg2', arg3='foo', cb='usercb')
-        self.assertEquals(set([ch1]), cp._free_channels)
+        self.assertEqual(set([ch1]), cp._free_channels)
         assert_equals(deque([(('arg1', 'arg2'), {'arg3': 'foo', 'cb': 'usercb'})]),
                       cp._queue)
 
@@ -186,8 +186,8 @@ class ChannelPoolTest(Chai):
 
         with expect(conn.channel).returns(mock()) as newchannel:
             expect(newchannel.add_close_listener).args(cp._channel_closed_cb)
-            self.assertEquals(newchannel, cp._get_channel())
-        self.assertEquals(set(), cp._free_channels)
+            self.assertEqual(newchannel, cp._get_channel())
+        self.assertEqual(set(), cp._free_channels)
         assert_equals(2, cp._channels)
 
     def test_get_channel_returns_new_when_none_free_and_at_limit(self):
@@ -197,8 +197,8 @@ class ChannelPoolTest(Chai):
 
         stub(conn.channel)
 
-        self.assertEquals(None, cp._get_channel())
-        self.assertEquals(set(), cp._free_channels)
+        self.assertEqual(None, cp._get_channel())
+        self.assertEqual(set(), cp._free_channels)
 
     def test_get_channel_when_one_free_and_not_closed(self):
         conn = mock()
@@ -207,8 +207,8 @@ class ChannelPoolTest(Chai):
         cp = ChannelPool(conn)
         cp._free_channels = set([ch])
 
-        self.assertEquals(ch, cp._get_channel())
-        self.assertEquals(set(), cp._free_channels)
+        self.assertEqual(ch, cp._get_channel())
+        self.assertEqual(set(), cp._free_channels)
 
     def test_get_channel_when_two_free_and_one_closed(self):
         # Because we can't mock builtins ....
@@ -232,8 +232,8 @@ class ChannelPoolTest(Chai):
         expect(cp._free_channels.pop).returns(
             ch2).side_effect(super(Set, cp._free_channels).pop)
 
-        self.assertEquals(ch2, cp._get_channel())
-        self.assertEquals(set(), cp._free_channels)
+        self.assertEqual(ch2, cp._get_channel())
+        self.assertEqual(set(), cp._free_channels)
         assert_equals(2, cp._channels)
 
     def test_get_channel_when_two_free_and_all_closed(self):
@@ -248,9 +248,9 @@ class ChannelPoolTest(Chai):
 
         with expect(conn.channel).returns(mock()) as newchannel:
             expect(newchannel.add_close_listener).args(cp._channel_closed_cb)
-            self.assertEquals(newchannel, cp._get_channel())
+            self.assertEqual(newchannel, cp._get_channel())
 
-        self.assertEquals(set(), cp._free_channels)
+        self.assertEqual(set(), cp._free_channels)
         assert_equals(3, cp._channels)
 
     def test_channel_closed_cb(self):

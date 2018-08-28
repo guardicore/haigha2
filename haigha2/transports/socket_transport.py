@@ -24,7 +24,7 @@ class SocketTransport(Transport):
     ###
     # Transport API
     ###
-    def connect(self, (host, port), klass=socket.socket):
+    def connect(self, address, klass=socket.socket):
         '''Connect assuming a host and port tuple.
 
         :param tuple: A tuple containing host and port for a connection.
@@ -32,6 +32,7 @@ class SocketTransport(Transport):
         :raises socket.gaierror: If no address can be resolved.
         :raises socket.error: If no connection can be made.
         '''
+        (host, port) = address
         self._host = "%s:%s" % (host, port)
 
         for info in socket.getaddrinfo(host, port, 0, 0, socket.IPPROTO_TCP):
@@ -41,7 +42,7 @@ class SocketTransport(Transport):
             self._sock.settimeout(self.connection._connect_timeout)
             if self.connection._sock_opts:
                 _sock_opts = self.connection._sock_opts
-                for (level, optname), value in _sock_opts.iteritems():
+                for (level, optname), value in _sock_opts.items():
                     self._sock.setsockopt(level, optname, value)
             try:
 
@@ -61,7 +62,6 @@ class SocketTransport(Transport):
             break
 
         else:
-
             raise
 
     def read(self, timeout=None):

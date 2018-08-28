@@ -7,7 +7,7 @@ except ImportError:
     from distutils.core import setup
 
 
-requirements = map(str.strip, open('requirements.txt').readlines())
+requirements = list(map(str.strip, open('requirements.txt').readlines()))
 
 setup(
     name='haigha2',

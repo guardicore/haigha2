@@ -50,13 +50,13 @@ class HaighaGeventHello(object):
     
     # Publish a message on the channel
     msg = Message('body', application_headers={'hello':'world'})
-    print "Publising message: %s" % (msg,)
+    print("Publising message: %s" % (msg,))
     self._channel.basic.publish(msg, 'test_exchange', 'test_routing_key')
     return
   
   
   def _message_pump_greenthread(self):
-    print "Entering Message Pump"
+    print("Entering Message Pump")
     try:
       while self._conn is not None:
         # Pump
@@ -65,15 +65,15 @@ class HaighaGeventHello(object):
         # Yield to other greenlets so they don't starve
         gevent.sleep()
     finally:
-      print "Leaving Message Pump"
+      print("Leaving Message Pump")
       self._done_cb()
     return
   
   
   def _handle_incoming_messages(self, msg):
-    print
-    print "Received message: %s" % (msg,)
-    print
+    print()
+    print("Received message: %s" % (msg,))
+    print()
     
     # Initiate graceful closing of the channel
     self._channel.basic.cancel(consumer=self._handle_incoming_messages)
@@ -82,8 +82,8 @@ class HaighaGeventHello(object):
   
   
   def _channel_closed_cb(self, ch):
-    print "AMQP channel closed; close-info: %s" % (
-      self._channel.close_info,)
+    print("AMQP channel closed; close-info: %s" % (
+      self._channel.close_info,))
     self._channel = None
     
     # Initiate graceful closing of the AMQP broker connection
@@ -91,8 +91,8 @@ class HaighaGeventHello(object):
     return
   
   def _connection_closed_cb(self):
-    print "AMQP broker connection closed; close-info: %s" % (
-      self._conn.close_info,)
+    print("AMQP broker connection closed; close-info: %s" % (
+      self._conn.close_info,))
     self._conn = None
     return
 
@@ -102,10 +102,10 @@ def main():
   
   HaighaGeventHello(waiter.set)
   
-  print "Waiting for I/O to complete..."
+  print("Waiting for I/O to complete...")
   waiter.wait()
   
-  print "Done!"
+  print("Done!")
   return
   
 

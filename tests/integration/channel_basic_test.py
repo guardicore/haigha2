@@ -143,7 +143,7 @@ class ChannelBasicTests(unittest.TestCase):
     return_info = msg.return_info
     self.assertItemsEqual(
       ['channel', 'reply_code', 'reply_text', 'exchange', 'routing_key'],
-      return_info.keys())
+      list(return_info.keys()))
     self.assertIs(return_info['channel'], ch)
     self.assertEqual(return_info['reply_code'], 312)
     self.assertEqual(return_info['reply_text'], 'NO_ROUTE')

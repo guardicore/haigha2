@@ -186,7 +186,7 @@ class BasicClass(ProtocolClass):
         :returns: matching consumer tag or None
         :rtype: str or None
         '''
-        for (tag, func) in self._consumer_cb.iteritems():
+        for (tag, func) in self._consumer_cb.items():
             if func == consumer:
                 return tag
 
