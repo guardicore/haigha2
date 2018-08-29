@@ -62,7 +62,7 @@ class Writer(object):
         if len(args) > 8:
             raise ValueError("Can only write 8 bits at a time")
 
-        self._output_buffer.append(chr(
+        self._output_buffer.extend(chr(
             reduce(lambda x, y: xor(x, args[y] << y), range(len(args)), 0)))
 
         return self
@@ -71,7 +71,7 @@ class Writer(object):
         '''
         Write a single bit. Convenience method for single bit args.
         '''
-        self._output_buffer.append(pack(True if b else False))
+        self._output_buffer.extend(pack(True if b else False))
         return self
 
     def write_octet(self, n, pack=Struct('B').pack):
@@ -79,7 +79,7 @@ class Writer(object):
         Write an integer as an unsigned 8-bit value.
         """
         if 0 <= n <= 255:
-            self._output_buffer.append(pack(n))
+            self._output_buffer.extend(pack(n))
         else:
             raise ValueError('Octet %d out of range 0..255', n)
         return self
@@ -213,65 +213,65 @@ class Writer(object):
                 self._field_none(value)
 
     def _field_bool(self, val, pack=Struct('B').pack):
-        self._output_buffer.append('t')
-        self._output_buffer.append(pack(True if val else False))
+        self._output_buffer.extend(b't')
+        self._output_buffer.extend(pack(True if val else False))
 
     def _field_int(self, val, short_pack=Struct('>h').pack,
                    int_pack=Struct('>i').pack, long_pack=Struct('>q').pack):
         if -2 ** 15 <= val < 2 ** 15:
-            self._output_buffer.append('s')
+            self._output_buffer.extend(b's')
             self._output_buffer.extend(short_pack(val))
         elif -2 ** 31 <= val < 2 ** 31:
-            self._output_buffer.append('I')
+            self._output_buffer.extend(b'I')
             self._output_buffer.extend(int_pack(val))
         else:
-            self._output_buffer.append('l')
+            self._output_buffer.extend(b'l')
             self._output_buffer.extend(long_pack(val))
 
     def _field_double(self, val, pack=Struct('>d').pack):
-        self._output_buffer.append('d')
+        self._output_buffer.extend(b'd')
         self._output_buffer.extend(pack(val))
 
     # Coding to http://dev.rabbitmq.com/wiki/Amqp091Errata#section_3 which
     # differs from spec in that the value is signed.
     def _field_decimal(self, val, exp_pack=Struct('B').pack,
                        dig_pack=Struct('>i').pack):
-        self._output_buffer.append('D')
+        self._output_buffer.extend(b'D')
         sign, digits, exponent = val.as_tuple()
         v = 0
         for d in digits:
             v = (v * 10) + d
         if sign:
             v = -v
-        self._output_buffer.append(exp_pack(-exponent))
+        self._output_buffer.extend(exp_pack(-exponent))
         self._output_buffer.extend(dig_pack(v))
 
     def _field_str(self, val):
-        self._output_buffer.append('S')
+        self._output_buffer.extend(b'S')
         self.write_longstr(val)
 
     def _field_unicode(self, val):
         val = val.encode('utf-8')
-        self._output_buffer.append('S')
+        self._output_buffer.extend(b'S')
         self.write_longstr(val)
 
     def _field_timestamp(self, val):
-        self._output_buffer.append('T')
+        self._output_buffer.extend(b'T')
         self.write_timestamp(val)
 
     def _field_table(self, val):
-        self._output_buffer.append('F')
+        self._output_buffer.extend(b'F')
         self.write_table(val)
 
     def _field_none(self, val):
-        self._output_buffer.append('V')
+        self._output_buffer.extend(b'V')
 
     def _field_bytearray(self, val):
-        self._output_buffer.append('x')
+        self._output_buffer.extend(b'x')
         self.write_longstr(val)
 
     def _field_iterable(self, val):
-        self._output_buffer.append('A')
+        self._output_buffer.extend(b'A')
         for x in val:
             self._write_field(x)
 
