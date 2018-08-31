@@ -33,16 +33,14 @@ class Reader(object):
         """
         # Note: buffer used here because unpack_from can't accept an array,
         # which I think is related to http://bugs.python.org/issue7827
-        if isinstance(source, bytearray):
-            self._input = buffer(source)
+        if isinstance(source, (bytes, bytearray)):
+            self._input = memoryview(source)
         elif isinstance(source, Reader):
             self._input = source._input
         elif hasattr(source, 'read'):
-            self._input = buffer(source.read())
+            self._input = memoryview(source.read())
         elif isinstance(source, str):
-            self._input = buffer(source)
-        elif isinstance(source, str):
-            self._input = buffer(source.encode('utf8'))
+            self._input = memoryview(source.encode())
         else:
             raise ValueError(
                 'Reader needs a bytearray, io object or plain string')
@@ -74,26 +72,25 @@ class Reader(object):
             self._pos = (self._end_pos - 1) + offset
 
     def _check_underflow(self, n):
-        '''
+        """
         Raise BufferUnderflow if there's not enough bytes to satisfy
         the request.
-        '''
+        """
         if self._pos + n > self._end_pos:
             raise self.BufferUnderflow()
 
     def __len__(self):
-        '''
+        """
         Supports content framing in Channel
-        '''
+        """
         return self._end_pos - self._start_pos
 
     def buffer(self):
-        '''
+        """
         Get a copy of the buffer that this is reading from. Returns a
         buffer object
-        '''
-        return buffer(self._input, self._start_pos,
-                      (self._end_pos - self._start_pos))
+        """
+        return self._input[self._start_pos: self._start_pos]
 
     def read(self, n):
         """
@@ -116,7 +113,7 @@ class Reader(object):
         # Perform a faster check on underflow
         if self._pos >= self._end_pos:
             raise self.BufferUnderflow()
-        result = ord(self._input[self._pos]) & 1
+        result = self._input[self._pos] & 1
         self._pos += 1
         return result
 
@@ -139,7 +136,7 @@ class Reader(object):
             raise self.BufferUnderflow()
         if num < 0 or num >= 9:
             raise ValueError("8 bits per field")
-        field = ord(self._input[self._pos])
+        field = self._input[self._pos]
         result = [field >> x & 1 for x in range(num)]
         self._pos += 1
         return result
@@ -266,7 +263,7 @@ class Reader(object):
         raise Reader.FieldError('Unknown field type %s', ftype)
 
     def _field_bool(self):
-        result = ord(self._input[self._pos]) & 1
+        result = self._input[self._pos] & 1
         self._pos += 1
         return result
 

@@ -3,13 +3,12 @@ Copyright (c) 2011-2017, Agora Games, LLC All rights reserved.
 
 https://github.com/agoragames/haigha/blob/master/LICENSE.txt
 '''
-
+from functools import reduce
 from struct import Struct
 from calendar import timegm
 from datetime import datetime
 from decimal import Decimal
 from operator import xor
-from functools import reduce
 
 
 class Writer(object):
@@ -51,19 +50,18 @@ class Writer(object):
         return self
 
     def write_bits(self, *args):
-        '''
+        """
         Write multiple bits in a single byte field. The bits will be written in
         little-endian order, but should be supplied in big endian order. Will
         raise ValueError when more than 8 arguments are supplied.
 
         write_bits(True, False) => 0x02
-        '''
+        """
         # Would be nice to make this a bit smarter
         if len(args) > 8:
             raise ValueError("Can only write 8 bits at a time")
 
-        self._output_buffer.extend(chr(
-            reduce(lambda x, y: xor(x, args[y] << y), range(len(args)), 0)))
+        self._output_buffer.append(reduce(lambda x, y: xor(x, args[y] << y), range(len(args)), 0))
 
         return self
 

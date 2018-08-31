@@ -29,7 +29,7 @@ from logging import root as root_logger
 # AMQP0091 = 0-9-1
 # http://lists.rabbitmq.com/pipermail/rabbitmq-discuss/2010-July/008231.html
 # PROTOCOL_HEADER = 'AMQP\x01\x01\x09\x01'
-PROTOCOL_HEADER = 'AMQP\x00\x00\x09\x01'
+PROTOCOL_HEADER = b'AMQP\x00\x00\x09\x01'
 
 # Client property info that gets sent to the server on connection startup
 LIBRARY_PROPERTIES = {
