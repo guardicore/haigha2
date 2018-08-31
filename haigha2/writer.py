@@ -26,8 +26,7 @@ class Writer(object):
             self._output_buffer = bytearray()
 
     def __str__(self):
-        return ''.join([
-            '\\x%s' % (chr(c).encode('hex')) for c in self._output_buffer])
+        return ''.join(['\\x%x' % c for c in self._output_buffer])
 
     __repr__ = __str__
 
@@ -202,7 +201,7 @@ class Writer(object):
         if writer:
             writer(self, value)
         else:
-            for kls, writer in list(self.field_type_map.items()):
+            for kls, writer in self.field_type_map.items():
                 if isinstance(value, kls):
                     writer(self, value)
                     break

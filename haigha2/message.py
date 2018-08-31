@@ -24,7 +24,7 @@ class Message(object):
                 properties['content_encoding'] = 'utf-8'
             body = body.encode(properties['content_encoding'])
 
-        if not isinstance(body, (str, bytearray)):
+        if not isinstance(body, (str, bytearray, bytes)):
             raise TypeError("Invalid message content type %s" % (type(body)))
 
         self._body = body

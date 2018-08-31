@@ -51,8 +51,7 @@ class Reader(object):
             self._end_pos = self._start_pos + size
 
     def __str__(self):
-        return ''.join(['\\x%s' % (c.encode('hex')) for c in
-                       self._input[self._start_pos:self._end_pos]])
+        return ''.join(['\\x%x' % c for c in self._input[self._start_pos:self._end_pos]])
 
     def tell(self):
         '''
