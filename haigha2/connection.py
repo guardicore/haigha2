@@ -52,7 +52,7 @@ class Connection(object):
         '''
         Initialize the connection.
         '''
-        self._debug = kwargs.get('debug', False)
+        self._debug = kwargs.get('debug', 0)
         self._logger = kwargs.get('logger', root_logger)
 
         self._user = kwargs.get('user', 'guest')

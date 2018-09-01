@@ -214,7 +214,7 @@ class RabbitExtensionsTests(unittest.TestCase):
             connection.read_frames()
         ((msg,),) = consumer.values
         _LOG.info('GOT %s', msg)
-        self.assertEqual(msg.body, 'hello world')
+        self.assertEqual(msg.body, bytearray(b'hello world'))
 
 
         _LOG.info(
@@ -266,13 +266,13 @@ class RabbitExtensionsTests(unittest.TestCase):
         self.assertEqual(len(callback_sink.values), 1)
 
         ((msg,),) = callback_sink.values
-        self.assertEqual(msg.body, 'hello world')
+        self.assertEqual(msg.body, bytearray(b'hello world'))
 
         self.assertIsNone(msg.delivery_info)
         self.assertIsNotNone(msg.return_info)
 
         return_info = msg.return_info
-        self.assertItemsEqual(
+        self.assertEqual(
             ['channel', 'reply_code', 'reply_text', 'exchange', 'routing_key'],
             list(return_info.keys()))
         self.assertIs(return_info['channel'], ch)

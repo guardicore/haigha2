@@ -449,4 +449,4 @@ class BasicClass(ProtocolClass):
             self.channel.requeue_frames([method_frame])
             raise self.FrameUnderflow()
 
-        return (header_frame, body)
+        return header_frame, body

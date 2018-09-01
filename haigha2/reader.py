@@ -89,7 +89,7 @@ class Reader(object):
         Get a copy of the buffer that this is reading from. Returns a
         buffer object
         """
-        return self._input[self._start_pos: self._start_pos]
+        return self._input[self._start_pos: self._end_pos]
 
     def read(self, n):
         """
@@ -98,7 +98,7 @@ class Reader(object):
         Will raise BufferUnderflow if there's not enough bytes in the buffer.
         """
         self._check_underflow(n)
-        rval = self._input[self._pos:self._pos + n]
+        rval = self._input[self._pos:self._pos + n].tobytes()
         self._pos += n
         return rval
 
@@ -205,7 +205,7 @@ class Reader(object):
         Will raise struct.error if the data is malformed
         """
         slen = self.read_octet()
-        return self.read(slen)
+        return self.read(slen).decode()
 
     def read_longstr(self):
         """
@@ -217,7 +217,7 @@ class Reader(object):
         Will raise struct.error if the data is malformed
         """
         slen = self.read_long()
-        return self.read(slen)
+        return self.read(slen).decode()
 
     def read_timestamp(self):
         """
@@ -337,13 +337,13 @@ class Reader(object):
         slen = self._field_short_short_uint()
         rval = self._input[self._pos:self._pos + slen]
         self._pos += slen
-        return rval
+        return rval.tobytes().decode()
 
     def _field_longstr(self):
         slen = self._field_long_uint()
         rval = self._input[self._pos:self._pos + slen]
         self._pos += slen
-        return rval
+        return rval.tobytes().decode()
 
     def _field_array(self):
         alen = self.read_long()
