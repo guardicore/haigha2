@@ -252,7 +252,7 @@ class Reader(object):
         '''
         Read a single byte for field type, then read the value.
         '''
-        ftype = self._input[self._pos]
+        ftype = chr(self._input[self._pos])
         self._pos += 1
 
         reader = self.field_type_map.get(ftype)
