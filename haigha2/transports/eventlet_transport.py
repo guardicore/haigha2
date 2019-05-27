@@ -120,6 +120,7 @@ class FixedEventletGreenSSLSocket(FixedGreenSSLSocket):
         self._socket_connect(addr)
         server_side = False
         server_hostname = getattr(self, "server_hostname", None)
+        # code was taken from eventlet/green/ssl.py
         # sslwrap was removed in 3.x and later in 2.7.9
         if six.PY2:
             sslobj = self._context._wrap_socket(self._sock, server_side, ssl_sock=self, server_hostname=server_hostname)
@@ -129,7 +130,7 @@ class FixedEventletGreenSSLSocket(FixedGreenSSLSocket):
         try:
             # This is added in Python 3.5, http://bugs.python.org/issue21965
             SSLObject = ssl.SSLObject
-        except NameError:
+        except AttributeError:
             self._sslobj = sslobj
         else:
             self._sslobj = SSLObject(sslobj, owner=self)
@@ -144,13 +145,12 @@ class SSLEventletTransport(EventletTransport):
 
     def connect(self, address):
         '''
-        Connect using a host,port tuple
+        Connect using a host,port tuple from address
         '''
-        host_port_tuple = address
-        
+
         def ssl_socket(*args, **kwargs):
             sock = eventlet_socket.socket(*args, **kwargs)
             return FixedEventletGreenSSLSocket(sock, **self.ssl_parameters)
 
-        SocketTransport.connect(self, host_port_tuple, klass=ssl_socket)
+        SocketTransport.connect(self, address, klass=ssl_socket)
 

@@ -1,5 +1,4 @@
 from haigha2.connection import Connection
-from six import PY2
 
 
 class InvalidHostNameInCertificateError(Exception):
