@@ -1,6 +1,7 @@
 import warnings
 import socket
-
+import six
+import ssl
 from haigha2.transports.socket_transport import SocketTransport
 
 try:
@@ -31,6 +32,7 @@ except ImportError:
     eventlet_green_ssl_orig_socket = None
     eventlet_green_ssl_socket = None
 
+
 class EventletTransport(SocketTransport):
     '''
     This is a eventlet based transport for haigha. Inspired by haigha's gevent_transport.
@@ -48,12 +50,11 @@ class EventletTransport(SocketTransport):
     # Transport API
     ###
 
-    def connect(self, address):
+    def connect(self, host_port_tuple):
         '''
         Connect using a host,port tuple
         '''
-        (host, port) = address
-        super(EventletTransport, self).connect((host, port), klass=eventlet_socket.socket)
+        super(EventletTransport, self).connect(host_port_tuple, klass=eventlet_socket.socket)
 
     def read(self, timeout=None):
         '''
@@ -103,7 +104,7 @@ class FixedGreenSSLSocket(GreenSSLSocket):
         try:
             return super(FixedGreenSSLSocket, self).recv(*args, **kwargs)
         except timeout_exc as e:
-            if e.message == 'timed out':
+            if e.msg == 'timed out':
                 raise socket.timeout('timed out')
             raise
 
@@ -119,10 +120,21 @@ class FixedEventletGreenSSLSocket(FixedGreenSSLSocket):
         self._socket_connect(addr)
         server_side = False
         server_hostname = getattr(self, "server_hostname", None)
-        sslobj = self._context._wrap_socket(self._sock, server_side, ssl_sock=self,
-                                            server_hostname=server_hostname)
+        # code was taken from eventlet/green/ssl.py
+        # sslwrap was removed in 3.x and later in 2.7.9
+        if six.PY2:
+            sslobj = self._context._wrap_socket(self._sock, server_side, ssl_sock=self, server_hostname=server_hostname)
+        else:
+            context = self.context if PY33 else self._context
+            sslobj = context._wrap_socket(self, server_side, server_hostname=server_hostname)
+        try:
+            # This is added in Python 3.5, http://bugs.python.org/issue21965
+            SSLObject = ssl.SSLObject
+        except AttributeError:
+            self._sslobj = sslobj
+        else:
+            self._sslobj = SSLObject(sslobj, owner=self)
 
-        self._sslobj = sslobj
         if self.do_handshake_on_connect:
             self.do_handshake()
 
@@ -133,11 +145,12 @@ class SSLEventletTransport(EventletTransport):
 
     def connect(self, address):
         '''
-        Connect using a host,port tuple
+        Connect using a host,port tuple from address
         '''
-        (host, port) = address
+
         def ssl_socket(*args, **kwargs):
             sock = eventlet_socket.socket(*args, **kwargs)
             return FixedEventletGreenSSLSocket(sock, **self.ssl_parameters)
 
-        SocketTransport.connect(self, (host, port), klass=ssl_socket)
+        SocketTransport.connect(self, address, klass=ssl_socket)
+

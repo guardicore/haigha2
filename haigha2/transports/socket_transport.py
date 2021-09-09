@@ -82,8 +82,7 @@ class SocketTransport(Transport):
                 self._sock.settimeout(timeout)
             else:
                 self._sock.settimeout(None)
-            data = self._sock.recv(
-                self._sock.getsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF))
+            data = self._sock.recv(self._sock.getsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF))
 
             if len(data):
                 if self.connection.debug > 1:

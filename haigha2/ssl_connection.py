@@ -1,5 +1,6 @@
 from haigha2.connection import Connection
 
+
 class InvalidHostNameInCertificateError(Exception):
     def __init__(self, hostname):
         Exception.__init__(self, "Incorrect hostname supplied by the certificate, was looking for %s" % hostname)
