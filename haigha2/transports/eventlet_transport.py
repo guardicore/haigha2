@@ -1,8 +1,11 @@
+__ssl = __import__('ssl')
+import sys
 import warnings
 import socket
 import six
 import ssl
 from haigha2.transports.socket_transport import SocketTransport
+from contextlib import contextmanager
 
 try:
     from eventlet.semaphore import Semaphore as EventletSemaphore
@@ -10,8 +13,8 @@ try:
     from eventlet.timeout import Timeout as EventletTimeout
     from eventlet.green import socket as eventlet_socket
     from eventlet.green import ssl as eventlet_ssl
-    from eventlet.green.ssl import GreenSSLSocket, timeout_exc
-    from eventlet.greenio import SOCKET_CLOSED
+    from eventlet.green.ssl import GreenSSLSocket, timeout_exc, CERT_NONE, PROTOCOL_SSLv23
+    from eventlet.greenio import SOCKET_CLOSED, GreenSocket
     from eventlet.hubs import trampoline
     from eventlet.support import get_errno, PY33
     from eventlet.green.ssl import orig_socket as eventlet_green_ssl_orig_socket
@@ -31,6 +34,19 @@ except ImportError:
     PY33 = None
     eventlet_green_ssl_orig_socket = None
     eventlet_green_ssl_socket = None
+
+
+_original_sslsocket = __ssl.SSLSocket
+_original_wrap_socket = __ssl.wrap_socket
+_original_sslcontext = getattr(__ssl, 'SSLContext', None)
+_is_under_py_3_7 = sys.version_info < (3, 7)
+
+try:
+    sslwrap = __ssl.sslwrap
+except AttributeError:
+    sslwrap_defined = False
+else:
+    sslwrap_defined = True
 
 
 class EventletTransport(SocketTransport):
@@ -109,7 +125,62 @@ class FixedGreenSSLSocket(GreenSSLSocket):
             raise
 
 
+@contextmanager
+def _original_ssl_context(*args, **kwargs):
+    tmp_sslcontext = _original_wrap_socket.__globals__.get('SSLContext', None)
+    tmp_sslsocket = _original_sslsocket._create.__globals__.get('SSLSocket', None)
+    _original_sslsocket._create.__globals__['SSLSocket'] = _original_sslsocket
+    _original_wrap_socket.__globals__['SSLContext'] = _original_sslcontext
+    try:
+        yield
+    finally:
+        _original_wrap_socket.__globals__['SSLContext'] = tmp_sslcontext
+        _original_sslsocket._create.__globals__['SSLSocket'] = tmp_sslsocket
+
+
 class FixedEventletGreenSSLSocket(FixedGreenSSLSocket):
+    def __new__(cls, sock=None, keyfile=None, certfile=None,
+                server_side=False, cert_reqs=CERT_NONE,
+                ssl_version=PROTOCOL_SSLv23, ca_certs=None,
+                do_handshake_on_connect=True, *args, **kw):
+        if _is_under_py_3_7:
+            return super(FixedEventletGreenSSLSocket, cls).__new__(cls)
+        else:
+            if not isinstance(sock, GreenSocket):
+                sock = GreenSocket(sock)
+            with _original_ssl_context():
+                context = kw.get('_context')
+                if context:
+                    ret = _original_sslsocket._create(
+                        sock=sock.fd,
+                        server_side=server_side,
+                        do_handshake_on_connect=False,
+                        suppress_ragged_eofs=kw.get('suppress_ragged_eofs', True),
+                        server_hostname=kw.get('server_hostname'),
+                        context=context,
+                        session=kw.get('session'),
+                    )
+                else:
+                    ret = _original_wrap_socket(
+                        sock=sock.fd,
+                        keyfile=keyfile,
+                        certfile=certfile,
+                        server_side=server_side,
+                        cert_reqs=cert_reqs,
+                        ssl_version=ssl_version,
+                        ca_certs=ca_certs,
+                        do_handshake_on_connect=False,
+                        ciphers=kw.get('ciphers'),
+                    )
+            ret.keyfile = keyfile
+            ret.certfile = certfile
+            ret.cert_reqs = cert_reqs
+            ret.ssl_version = ssl_version
+            ret.ca_certs = ca_certs
+            ret.server_hostname = kw.get('server_hostname')
+            ret.__class__ = FixedEventletGreenSSLSocket
+            return ret
+
     def connect(self, addr):
         """Connects to remote ADDR, and then wraps the connection in
         an SSL channel."""
@@ -117,23 +188,32 @@ class FixedEventletGreenSSLSocket(FixedGreenSSLSocket):
         # to socket.connect which we don't want to call directly
         if self._sslobj:
             raise ValueError("attempt to connect already-connected SSLSocket!")
+        self.act_non_blocking = False
         self._socket_connect(addr)
         server_side = False
-        server_hostname = getattr(self, "server_hostname", None)
         # code was taken from eventlet/green/ssl.py
         # sslwrap was removed in 3.x and later in 2.7.9
-        if six.PY2:
-            sslobj = self._context._wrap_socket(self._sock, server_side, ssl_sock=self, server_hostname=server_hostname)
+        if not sslwrap_defined:
+            # sslwrap was removed in 3.x and later in 2.7.9
+            if six.PY2:
+                sslobj = self._context._wrap_socket(self._sock, server_side, ssl_sock=self)
+            else:
+                context = self.context if PY33 else self._context
+                sslobj = context._wrap_socket(self, server_side, server_hostname=self.server_hostname)
         else:
-            context = self.context if PY33 else self._context
-            sslobj = context._wrap_socket(self, server_side, server_hostname=server_hostname)
+            sslobj = sslwrap(self._sock, server_side, self.keyfile, self.certfile,
+                             self.cert_reqs, self.ssl_version,
+                             self.ca_certs, *self.ciphers)
         try:
             # This is added in Python 3.5, http://bugs.python.org/issue21965
-            SSLObject = ssl.SSLObject
+            ssl.SSLObject
         except AttributeError:
             self._sslobj = sslobj
         else:
-            self._sslobj = SSLObject(sslobj, owner=self)
+            if _is_under_py_3_7:
+                self._sslobj = ssl.SSLObject(sslobj, owner=self)
+            else:
+                self._sslobj = sslobj
 
         if self.do_handshake_on_connect:
             self.do_handshake()
