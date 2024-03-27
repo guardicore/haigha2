@@ -11,7 +11,10 @@ from haigha2.transports.socket_transport import SocketTransport
 try:
     import gevent
     import gevent.ssl
-    import gevent._socket2
+    try:
+        import gevent._socket2
+    except ImportError:
+        import gevent._socket3
     import gevent.socket
     import gevent.ssl
     from gevent.event import Event
