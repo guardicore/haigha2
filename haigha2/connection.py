@@ -16,7 +16,7 @@ from haigha2.classes.transaction_class import TransactionClass
 from haigha2.writer import Writer
 from haigha2.reader import Reader
 from haigha2.transports.transport import Transport
-from exceptions import ConnectionError, ConnectionClosed
+from .exceptions import ConnectionError, ConnectionClosed
 
 import haigha2
 import time
@@ -29,7 +29,7 @@ from logging import root as root_logger
 # AMQP0091 = 0-9-1
 # http://lists.rabbitmq.com/pipermail/rabbitmq-discuss/2010-July/008231.html
 # PROTOCOL_HEADER = 'AMQP\x01\x01\x09\x01'
-PROTOCOL_HEADER = 'AMQP\x00\x00\x09\x01'
+PROTOCOL_HEADER = b'AMQP\x00\x00\x09\x01'
 
 # Client property info that gets sent to the server on connection startup
 LIBRARY_PROPERTIES = {
@@ -52,7 +52,7 @@ class Connection(object):
         '''
         Initialize the connection.
         '''
-        self._debug = kwargs.get('debug', False)
+        self._debug = kwargs.get('debug', 0)
         self._logger = kwargs.get('logger', root_logger)
 
         self._user = kwargs.get('user', 'guest')

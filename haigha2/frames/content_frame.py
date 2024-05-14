@@ -50,8 +50,7 @@ class ContentFrame(Frame):
 
     def __str__(self):
         if isinstance(self._payload, str):
-            payload = ''.join(['\\x%s' % (c.encode('hex'))
-                               for c in self._payload])
+            payload = ''.join(['\\x%x' % c for c in self._payload])
         else:
             payload = str(self._payload)
 

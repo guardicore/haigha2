@@ -186,7 +186,7 @@ class BasicClass(ProtocolClass):
         :returns: matching consumer tag or None
         :rtype: str or None
         '''
-        for (tag, func) in self._consumer_cb.iteritems():
+        for (tag, func) in self._consumer_cb.items():
             if func == consumer:
                 return tag
 
@@ -449,4 +449,4 @@ class BasicClass(ProtocolClass):
             self.channel.requeue_frames([method_frame])
             raise self.FrameUnderflow()
 
-        return (header_frame, body)
+        return header_frame, body

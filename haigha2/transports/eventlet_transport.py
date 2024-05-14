@@ -48,10 +48,11 @@ class EventletTransport(SocketTransport):
     # Transport API
     ###
 
-    def connect(self, (host, port)):
+    def connect(self, address):
         '''
         Connect using a host,port tuple
         '''
+        (host, port) = address
         super(EventletTransport, self).connect((host, port), klass=eventlet_socket.socket)
 
     def read(self, timeout=None):
@@ -130,11 +131,11 @@ class SSLEventletTransport(EventletTransport):
     def initialize_transport(self, **kwargs):
         self.ssl_parameters = kwargs
 
-    def connect(self, (host, port)):
+    def connect(self, address):
         '''
         Connect using a host,port tuple
         '''
-
+        (host, port) = address
         def ssl_socket(*args, **kwargs):
             sock = eventlet_socket.socket(*args, **kwargs)
             return FixedEventletGreenSSLSocket(sock, **self.ssl_parameters)

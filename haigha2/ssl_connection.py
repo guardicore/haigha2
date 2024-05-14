@@ -29,10 +29,10 @@ class SSLConnection(Connection):
             from haigha2.transports.eventlet_transport import SSLEventletTransport
             transport_class = SSLEventletTransport
         else:
-            raise StandardError("Unsupported transport type '{transport_type}'".format(transport_type=transport_type))
+            raise Exception("Unsupported transport type '{transport_type}'".format(transport_type=transport_type))
 
         if transport_class is None:
-            raise StandardError("Transport type is '{transport_type}' but {transport_type} not installed".format(
+            raise Exception("Transport type is '{transport_type}' but {transport_type} not installed".format(
                 transport_type=transport_type))
         return transport_class
 

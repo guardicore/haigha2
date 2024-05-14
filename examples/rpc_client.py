@@ -16,7 +16,7 @@ class FibonacciRpcClient(object):
 
         result = self.channel.queue.declare(exclusive=True)
         self.callback_queue = result[0]
-        print("callback_queue:", self.callback_queue)
+        print(("callback_queue:", self.callback_queue))
 
         self.channel.basic.consume(self.callback_queue, self.on_response, no_ack=True)
 
@@ -35,7 +35,7 @@ class FibonacciRpcClient(object):
 
 fibonacci_rpc = FibonacciRpcClient()
 
-print " [x] Requesting fib(30)"
+print(" [x] Requesting fib(30)")
 response = fibonacci_rpc.call(30)
-print " [.] Got %r" % (response,)
+print(" [.] Got %r" % (response,))
 

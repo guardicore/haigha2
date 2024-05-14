@@ -19,12 +19,12 @@ class Message(object):
         :param return_info: pass only if message was returned via basic.return;
           MUST be None otherwise; default: None
         '''
-        if isinstance(body, unicode):
+        if isinstance(body, str):
             if 'content_encoding' not in properties:
                 properties['content_encoding'] = 'utf-8'
             body = body.encode(properties['content_encoding'])
 
-        if not isinstance(body, (str, unicode, bytearray)):
+        if not isinstance(body, (str, bytearray, bytes)):
             raise TypeError("Invalid message content type %s" % (type(body)))
 
         self._body = body
@@ -39,7 +39,7 @@ class Message(object):
     def __len__(self):
         return len(self._body)
 
-    def __nonzero__(self):
+    def __bool__(self):
         '''Have to define this because length is defined.'''
         return True
 
@@ -77,5 +77,5 @@ class Message(object):
     def __str__(self):
         return ("Message[body: %s, delivery_info: %s, return_info: %s, "
                 "properties: %s]") %\
-            (str(self._body).encode('string_escape'),
+            (str(self._body).encode('unicode_escape'),
              self._delivery_info, self.return_info, self._properties)

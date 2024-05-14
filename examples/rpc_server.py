@@ -23,7 +23,7 @@ def fib(n):
 def on_request(msg):
     n = int(msg.body)
 
-    print " [.] fib(%s)"  % (n,)
+    print(" [.] fib(%s)"  % (n,))
     result = fib(n)
 
     reply_to = msg.properties["reply_to"]
@@ -37,7 +37,7 @@ def on_request(msg):
 channel.basic.qos(prefetch_count=1)
 channel.basic.consume('rpc_queue', on_request, no_ack=False)
 
-print " [x] Awaiting RPC requests"
+print(" [x] Awaiting RPC requests")
 while not channel.closed:
     connection.read_frames()
 

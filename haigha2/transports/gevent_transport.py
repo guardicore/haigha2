@@ -50,10 +50,11 @@ class GeventTransport(SocketTransport):
     # Transport API
     ###
 
-    def connect(self, (host, port)):
+    def connect(self, address):
         '''
         Connect using a host,port tuple
         '''
+        (host, port) = address
         super(GeventTransport, self).connect((host, port), klass=socket.socket)
 
     def read(self, timeout=None):
@@ -182,11 +183,11 @@ class SSLGeventTransport(GeventTransport):
     def initialize_transport(self, **kwargs):
         self.ssl_parameters = kwargs
 
-    def connect(self, (host, port)):
+    def connect(self, address):
         '''
         Connect using a host,port tuple
         '''
-
+        (host, port) = address
         def ssl_socket(*args, **kwargs):
             sock = gevent.socket.socket(*args, **kwargs)
             return FixedGeventSSLSocket(sock, **self.ssl_parameters)

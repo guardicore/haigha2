@@ -40,7 +40,7 @@ class HeaderFrameTest(Chai):
 
         # strip ms because amqp doesn't include it
         now = datetime.utcfromtimestamp(
-            long(time.mktime(datetime.now().timetuple())))
+            int(time.mktime(datetime.now().timetuple())))
 
         bit_field = 0
         for pname, ptype, reader, writer, mask in HeaderFrame.PROPERTIES:
@@ -71,13 +71,13 @@ class HeaderFrameTest(Chai):
 
         for pname, ptype, reader, writer, mask in HeaderFrame.PROPERTIES:
             if ptype == 'shortstr':
-                self.assertEquals(pname, frame.properties[pname])
+                self.assertEqual(pname, frame.properties[pname])
             elif ptype == 'octet':
-                self.assertEquals(42, frame.properties[pname])
+                self.assertEqual(42, frame.properties[pname])
             elif ptype == 'timestamp':
-                self.assertEquals(now, frame.properties[pname])
+                self.assertEqual(now, frame.properties[pname])
             elif ptype == 'table':
-                self.assertEquals({'foo': 'bar'}, frame.properties[pname])
+                self.assertEqual({'foo': 'bar'}, frame.properties[pname])
 
         assert_equals(4, frame.channel_id)
         assert_equals(5, frame._class_id)
@@ -91,7 +91,7 @@ class HeaderFrameTest(Chai):
 
         # strip ms because amqp doesn't include it
         now = datetime.utcfromtimestamp(
-            long(time.mktime(datetime.now().timetuple())))
+            int(time.mktime(datetime.now().timetuple())))
 
         bit_field = 0
         for pname, ptype, reader, writer, mask in HeaderFrame.PROPERTIES:
@@ -123,13 +123,13 @@ class HeaderFrameTest(Chai):
 
         for pname, ptype, reader, writer, mask in HeaderFrame.PROPERTIES:
             if ptype == 'shortstr':
-                self.assertEquals(pname, frame.properties[pname])
+                self.assertEqual(pname, frame.properties[pname])
             elif ptype == 'octet':
-                self.assertEquals(42, frame.properties[pname])
+                self.assertEqual(42, frame.properties[pname])
             elif ptype == 'timestamp':
-                self.assertEquals(now, frame.properties[pname])
+                self.assertEqual(now, frame.properties[pname])
             elif ptype == 'table':
-                self.assertEquals({'foo': 'bar'}, frame.properties[pname])
+                self.assertEqual({'foo': 'bar'}, frame.properties[pname])
 
         assert_equals(4, frame.channel_id)
         assert_equals(5, frame._class_id)
@@ -140,7 +140,7 @@ class HeaderFrameTest(Chai):
         bit_field = 0
         properties = {}
         now = datetime.utcfromtimestamp(
-            long(time.mktime(datetime.now().timetuple())))
+            int(time.mktime(datetime.now().timetuple())))
         for pname, ptype, reader, writer, mask in HeaderFrame.PROPERTIES:
             bit_field |= mask
 
@@ -186,7 +186,7 @@ class HeaderFrameTest(Chai):
         bit_field = 0
         properties = {}
         now = datetime.utcfromtimestamp(
-            long(time.mktime(datetime.now().timetuple())))
+            int(time.mktime(datetime.now().timetuple())))
         for pname, ptype, reader, writer, mask in HeaderFrame.PROPERTIES:
             bit_field |= mask
 
