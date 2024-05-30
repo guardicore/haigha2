@@ -12,7 +12,6 @@ class SSLConnection(Connection):
 
     def initialize_ssl(self, transport_type='gevent', **kwargs):
         """
-
         :param args:
         :param kwargs:
         :param transport_type: can be 'gevent' or 'eventlet'
