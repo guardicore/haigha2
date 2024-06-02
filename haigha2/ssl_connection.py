@@ -1,5 +1,6 @@
 from haigha2.connection import Connection
-
+from cryptography import x509
+from cryptography.hazmat.backends import default_backend
 
 class InvalidHostNameInCertificateError(Exception):
     def __init__(self, hostname):
@@ -37,19 +38,37 @@ class SSLConnection(Connection):
                 transport_type=transport_type))
         return transport_class
 
+    @staticmethod
+    def parse_name(name):
+        return [[(attr.oid._name, attr.value)] for attr in name]
+
+    @staticmethod
+    def parse_certificate(cert):
+        subject = SSLConnection.parse_name(cert.subject)
+        issuer = SSLConnection.parse_name(cert.issuer)
+        return {
+            'subject': subject,
+            'issuer': issuer,
+            'serialNumber': cert.serial_number,
+            'notBefore': cert.not_valid_before,
+            'notAfter': cert.not_valid_after,
+        }
+
     def verify_hostname(self, host_name):
-        cert = self._transport._sock.getpeercert()
-        if not cert:
-            raise InvalidHostNameInCertificateError(host_name)
-        subject = cert.get('subject', None)
+        binary_cert = self._transport._sock.getpeercert(binary_form=True)
+        cert = x509.load_der_x509_certificate(binary_cert, default_backend())
+        cert_dict = SSLConnection.parse_certificate(cert)
+
+        subject = cert_dict.get('subject', None)
         if not subject:
             raise InvalidHostNameInCertificateError(host_name)
+
         for details in subject:
             personal_detail_type, personal_detail_value = details[0]
             if personal_detail_type == 'commonName' and personal_detail_value == host_name:
                 return
             # Backwards compatibility
-            # TODO: remove this
             if personal_detail_type == 'organizationName' and personal_detail_value == host_name:
                 return
+        
         raise InvalidHostNameInCertificateError(host_name)

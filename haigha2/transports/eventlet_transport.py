@@ -37,7 +37,7 @@ except ImportError:
 
 
 _original_sslsocket = __ssl.SSLSocket
-_original_wrap_socket = __ssl.wrap_socket
+_original_wrap_socket = __ssl.SSLContext.wrap_socket
 _original_sslcontext = getattr(__ssl, 'SSLContext', None)
 _is_under_py_3_7 = sys.version_info < (3, 7)
 
@@ -161,7 +161,7 @@ class FixedEventletGreenSSLSocket(FixedGreenSSLSocket):
                         session=kw.get('session'),
                     )
                 else:
-                    ret = _original_wrap_socket(
+                    ret = cls._wrap_socket(
                         sock=sock.fd,
                         keyfile=keyfile,
                         certfile=certfile,
@@ -217,6 +217,26 @@ class FixedEventletGreenSSLSocket(FixedGreenSSLSocket):
 
         if self.do_handshake_on_connect:
             self.do_handshake()
+            
+    @staticmethod
+    def _wrap_socket(sock, keyfile, certfile, server_side, cert_reqs,
+                     ssl_version, ca_certs, do_handshake_on_connect, ciphers):
+        context = _original_sslcontext(protocol=ssl_version)
+        context.options |= cert_reqs
+        if certfile or keyfile:
+            context.load_cert_chain(
+                certfile=certfile,
+                keyfile=keyfile,
+            )
+        if ca_certs:
+            context.load_verify_locations(ca_certs)
+        if ciphers:
+            context.set_ciphers(ciphers)
+        return context.wrap_socket(
+            sock=sock,
+            server_side=server_side,
+            do_handshake_on_connect=do_handshake_on_connect,
+        )
 
 
 class SSLEventletTransport(EventletTransport):
