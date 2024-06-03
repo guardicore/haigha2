@@ -13,7 +13,7 @@ try:
     from eventlet.timeout import Timeout as EventletTimeout
     from eventlet.green import socket as eventlet_socket
     from eventlet.green import ssl as eventlet_ssl
-    from eventlet.green.ssl import GreenSSLSocket, timeout_exc, CERT_NONE, PROTOCOL_SSLv23
+    from eventlet.green.ssl import GreenSSLSocket, timeout_exc, CERT_REQUIRED, PROTOCOL_TLS
     from eventlet.greenio import SOCKET_CLOSED, GreenSocket
     from eventlet.hubs import trampoline
     from eventlet.support import get_errno, PY33
@@ -140,8 +140,8 @@ def _original_ssl_context(*args, **kwargs):
 
 class FixedEventletGreenSSLSocket(FixedGreenSSLSocket):
     def __new__(cls, sock=None, keyfile=None, certfile=None,
-                server_side=False, cert_reqs=CERT_NONE,
-                ssl_version=PROTOCOL_SSLv23, ca_certs=None,
+                server_side=False, cert_reqs=CERT_REQUIRED,
+                ssl_version=PROTOCOL_TLS, ca_certs=None,
                 do_handshake_on_connect=True, *args, **kw):
         if _is_under_py_3_7:
             return super(FixedEventletGreenSSLSocket, cls).__new__(cls)
@@ -171,13 +171,13 @@ class FixedEventletGreenSSLSocket(FixedGreenSSLSocket):
                         ca_certs=ca_certs,
                         do_handshake_on_connect=False,
                         ciphers=kw.get('ciphers'),
+                        server_hostname=kw.get('server_hostname')
                     )
             ret.keyfile = keyfile
             ret.certfile = certfile
             ret.cert_reqs = cert_reqs
             ret.ssl_version = ssl_version
             ret.ca_certs = ca_certs
-            ret.server_hostname = kw.get('server_hostname')
             ret.__class__ = FixedEventletGreenSSLSocket
             return ret
 
@@ -220,7 +220,7 @@ class FixedEventletGreenSSLSocket(FixedGreenSSLSocket):
             
     @staticmethod
     def _wrap_socket(sock, keyfile, certfile, server_side, cert_reqs,
-                     ssl_version, ca_certs, do_handshake_on_connect, ciphers):
+                     ssl_version, ca_certs, do_handshake_on_connect, ciphers, server_hostname):
         context = _original_sslcontext(protocol=ssl_version)
         context.options |= cert_reqs
         if certfile or keyfile:
@@ -229,10 +229,13 @@ class FixedEventletGreenSSLSocket(FixedGreenSSLSocket):
                 keyfile=keyfile,
             )
         if ca_certs:
-            context.load_verify_locations(ca_certs)
+            context.load_verify_locations(cafile=ca_certs)
         if ciphers:
             context.set_ciphers(ciphers)
+        context.check_hostname = True
+        # context.load_default_certs()
         return context.wrap_socket(
+            server_hostname=server_hostname,
             sock=sock,
             server_side=server_side,
             do_handshake_on_connect=do_handshake_on_connect,
