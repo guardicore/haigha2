@@ -233,7 +233,7 @@ class FixedEventletGreenSSLSocket(FixedGreenSSLSocket):
         if ciphers:
             context.set_ciphers(ciphers)
         context.check_hostname = True
-        # context.load_default_certs()
+        context.load_default_certs()
         return context.wrap_socket(
             server_hostname=server_hostname,
             sock=sock,
