@@ -1,6 +1,5 @@
 from haigha2.connection import Connection
-from cryptography import x509
-from cryptography.hazmat.backends import default_backend
+
 
 class InvalidHostNameInCertificateError(Exception):
     def __init__(self, hostname):
