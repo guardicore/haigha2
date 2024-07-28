@@ -120,7 +120,7 @@ class FixedGreenSSLSocket(GreenSSLSocket):
         try:
             return super(FixedGreenSSLSocket, self).recv(*args, **kwargs)
         except timeout_exc as e:
-            if e.msg == 'timed out':
+            if isinstance(e, ssl.SSLError):
                 raise socket.timeout('timed out')
             raise
 
