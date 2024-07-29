@@ -36,7 +36,7 @@ class SSLConnection(Connection):
             raise Exception("Transport type is '{transport_type}' but {transport_type} not installed".format(
                 transport_type=transport_type))
         return transport_class
-
+    
     def verify_hostname(self, host_name):
         cert = self._transport._sock.getpeercert()
         if not cert:
