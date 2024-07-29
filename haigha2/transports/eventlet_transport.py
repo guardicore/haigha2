@@ -126,7 +126,8 @@ class FixedGreenSSLSocket(GreenSSLSocket):
         try:
             return super(FixedGreenSSLSocket, self).recv(*args, **kwargs)
         except timeout_exc as e:
-            if e.msg == 'timed out':
+            # GC-89692 -> e has no attribute 'msg'
+            if isinstance(e, socket.timeout) :
                 raise socket.timeout('timed out')
             raise
 
