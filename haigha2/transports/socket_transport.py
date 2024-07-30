@@ -8,7 +8,7 @@ from haigha2.transports.transport import Transport
 
 import errno
 import socket
-
+import ssl
 
 class SocketTransport(Transport):
 
@@ -97,12 +97,19 @@ class SocketTransport(Transport):
             # Note that no data means the socket is closed and we'll mark that
             # below
 
-        except socket.timeout as e:
+        except ssl.SSLError as e:
+            # GC-89692 -> SSLError isn't a subclass of socket.timeout since Python3
+            # Exception
+            # └── OSError
+            #     ├── socket.error
+            #     │    └── socket.timeout
+            #     └── ssl.SSLError
+            # https://github.com/eventlet/eventlet/commit/caf9f9983a43c537efff5c4c9ff1d543af6e1220
             # Note that this is implemented differently and though it would be
             # caught as an EnvironmentError, it has no errno. Not sure whose
             # fault that is.
             return None
-
+        
         except EnvironmentError as err:
             # thrown if we have a timeout and no data
             if err.errno in (errno.EAGAIN, errno.EWOULDBLOCK, errno.EINTR):
