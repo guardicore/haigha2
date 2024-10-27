@@ -121,7 +121,7 @@ class FixedGreenSSLSocket(GreenSSLSocket):
             return super(FixedGreenSSLSocket, self).recv(*args, **kwargs)
         except timeout_exc as e:
             if isinstance(e, ssl.SSLError):
-                # GC-89692 -> Has to be raised as SSLError since socket_transport.py:100 expects same error
+                # GC-89692 -> Has to be raised as SSLError since socket_transport.py:100 expects same error.
                 # If you ever upgrade eventlet from 0.32 to 0.34=< -> Exception has to be changed back to socket.timeout
                 raise ssl.SSLError('timed out')
             raise
